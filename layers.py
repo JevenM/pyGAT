@@ -1,4 +1,3 @@
-import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -8,16 +7,21 @@ class GraphAttentionLayer(nn.Module):
     """
     Simple GAT layer, similar to https://arxiv.org/abs/1710.10903
     """
-    def __init__(self, in_features, out_features, dropout, alpha, concat=True):
+    def __init__(self, in_features: int, out_features: int, dropout: float = 0.6, alpha: float = 0.2, concat: bool = True):
         super(GraphAttentionLayer, self).__init__()
+        # is the dropout probability
         self.dropout = dropout
         self.in_features = in_features
         self.out_features = out_features
+        # alpha is the negative slope for leaky relu activation
         self.alpha = alpha
+        # whether the multi-head results should be concatenated or averaged
         self.concat = concat
 
         self.W = nn.Parameter(torch.empty(size=(in_features, out_features)))
+        # 两种分布方式
         nn.init.xavier_uniform_(self.W.data, gain=1.414)
+        #torch.nn.init.kaiming_uniform_(self.W.data, a=0, mode='fan_in', nonlinearity='leaky_relu')
         self.a = nn.Parameter(torch.empty(size=(2*out_features, 1)))
         nn.init.xavier_uniform_(self.a.data, gain=1.414)
 

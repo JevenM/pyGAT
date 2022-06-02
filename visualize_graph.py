@@ -3,6 +3,11 @@ from graphviz import Digraph
 import torch
 import models
 
+
+# windows在https://graphviz.gitlab.io/_pages/Download/Download_windows.html安装完graphviz，添加系统环境变量，cmd里面执行dot -version可以显示版本号
+# 但是这个文件依旧执行不成功，报错graphviz.backend.execute.ExecutableNotFound: failed to execute 'dot', make sure the Graphviz executables are on your systems' PATH
+# 算了，不运行这个了 20220105
+
 def make_dot(var, params):
     """ Produces Graphviz representation of PyTorch autograd graph
     
@@ -16,7 +21,7 @@ def make_dot(var, params):
     """
     param_map = {id(v): k for k, v in params.items()}
     print(param_map)
-    
+
     node_attr = dict(style='filled',
                      shape='box',
                      align='left',
@@ -25,9 +30,9 @@ def make_dot(var, params):
                      height='0.2')
     dot = Digraph(node_attr=node_attr, graph_attr=dict(size="12,12"))
     seen = set()
-    
+
     def size_to_str(size):
-        return '('+(', ').join(['%d'% v for v in size])+')'
+        return '(' + (', ').join(['%d' % v for v in size]) + ')'
 
     def add_nodes(var):
         if var not in seen:
@@ -49,8 +54,10 @@ def make_dot(var, params):
                 for t in var.saved_tensors:
                     dot.edge(str(id(t)), str(id(var)))
                     add_nodes(t)
+
     add_nodes(var.grad_fn)
     return dot
+
 
 inputs = torch.randn(100, 50).cuda()
 adj = torch.randn(100, 100).cuda()

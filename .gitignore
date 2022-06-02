@@ -67,6 +67,8 @@ docs/_build/
 # PyBuilder
 target/
 
+.idea/
+
 # Jupyter Notebook
 .ipynb_checkpoints
 
@@ -99,3 +101,8 @@ ENV/
 
 # mypy
 .mypy_cache/
+*.pkl
+*.jpg
+*.gv
+*.xml
+*.xml
